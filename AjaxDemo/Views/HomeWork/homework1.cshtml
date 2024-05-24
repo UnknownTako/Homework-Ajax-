@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "homework1";
+}
+
+<h1>homework1</h1>
+
+<div class="row row-cols-1 row-cols-md-2 g-4" id="Aframe">
+    <div class="col">
+        <div class="card">
+            <img src="http://www.travel.taipei/d_upload_ttn/sceneadmin/pic/11000848.jpg" class="card-img-top" alt="北投溫泉溫泉博物館">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/travel.js"></script>
+    <script>
+        console.log(spots.CommonFormat.Section);
+        let allsection = spots.CommonFormat.Section;
+        let Aframe = document.getElementById("Aframe");
+        var s = "";
+
+        for (var spot of allsection) {
+            console.log(spot);
+
+            if (spot.file.img && spot.file.img.length > 0) {
+                var secimages = spot.file.img;
+                for (var image of secimages) {
+                    console.log(image.text);
+                    var imgurl = image.text;
+
+                    s += `<div class="col">
+                            <div class="card">
+                             <img src="${imgurl}" class="card-img-top" title="${spot.stitle}">
+                              <div class="card-body">
+                                 <h4 class="card-title" style="font-style:italic">${spot.stitle}</h4>
+                                <p class="card-text">${spot.xbody}</p>
+                              </div>
+                            </div>
+                          </div>`;
+                }
+            }
+        }
+        Aframe.innerHTML = s;
+    </script>
+}

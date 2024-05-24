@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Address";
+}
+
+<h1>Address</h1>
+<select id="selectCity">
+    <option value="a">Item1</option>
+    <option value="b">Item2</option>
+</select>
+<select id="selectDistrict">
+    <option value="c">Item3</option>
+</select>
+<select id="selectRoad">
+    <option value="d">Item4</option>
+</select>
+<p>選擇地址:<span id="address"></span></p>
+
+@section Scripts{
+    <script>
+        let selectedCity = document.querySelector('#selectCity');
+        let selectedDistrict = document.querySelector('#selectDistrict');
+        let selectedRoad = document.querySelector('#selectRoad');
+        let selectedAddress = document.querySelector('#address');
+        (async () => {
+            const response = await fetch('@Url.Content("~/api/cities")');
+            if (!response.ok) { console.log(`error:${response.status}`); return; }
+            const datas = await response.json();
+            const cities = datas.map(city =>`<option value="${city}">${city}</option>`);
+            selectedCity.innerHTML = cities.join("");
+            await loadDistricts();
+            loadRoads();
+        })();
+
+        const loadDistricts = async () => {
+            const url = `@Url.Content("~/api/districts")?city=${selectedCity.value}`;
+            //console.log(url);
+            const response = await fetch(url);
+            const datas = await response.json();
+            const districts = datas.map(district => `<option value="${district}">${district}</option>`);
+            selectedDistrict.innerHTML = districts.join("");
+        }
+
+        const loadRoads = async () => {
+            const url = `@Url.Content("~/api/Roads")?districts=${selectedDistrict.value}`;
+            console.log(url);
+            const response = await fetch(url);
+            const datas = await response.json();
+            const roads = datas.map(roads => `<option value="${roads}">${roads}</option>`);
+            selectedRoad.innerHTML = roads.join("");
+        }
+
+        function loadselectedAddress(){selectedAddress.innerHTML = selectedDistrict.value + selectedRoad.value;}
+
+        selectedCity.addEventListener('change', loadDistricts);
+        selectedDistrict.addEventListener('change', loadRoads);
+        selectedRoad.addEventListener('change', loadselectedAddress);
+    </script>
+}

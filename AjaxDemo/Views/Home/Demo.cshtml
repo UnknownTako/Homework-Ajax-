@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    h1 {
+        background-color: aquamarine;
+    }
+
+        h1:hover {
+            background-color: darkcyan;
+        }
+</style>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Dashboard</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">Primary Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">Warning Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">Success Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body">Danger Card</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-area me-1"></i>
+                    Area Chart Example
+                </div>
+                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    Bar Chart Example
+                </div>
+                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            DataTable Example
+        </div>
+        <div class="card-body">
+        </div>
+    </div>
+</div>
+<table id="pp" class="table table-hover table-info"></table>
+
+@section Scripts{
+    <script>
+        let tital = document.querySelector('h1');
+        tital.addEventListener('mouseover', (evt) => { evt.target.style.backgroundColor = 'yellow'; console.log(this); });
+        tital.addEventListener('mouseout', function () { this.style.backgroundColor = 'blueviolet' });
+
+        function printsomething(data) {
+            const promise = new Promise(function (resolve, reject) {
+                setTimeout(function () { resolve(data) }, 1000);
+            })
+            return promise;
+        }
+        printsomething("A").then(data => {
+            console.log(data)
+            return printsomething("B")
+        }).then(data => {
+            console.log(data)
+            return printsomething("C")
+        }).then(data => {
+            console.log(data)
+        }).finally(() => {
+            console.log("END")
+        });
+
+        (async () => {
+            let datas = await printsomething('AA');
+            console.log(datas);
+            datas = await printsomething('BB');
+            console.log(datas);
+            datas = await printsomething('CC');
+            console.log(datas);
+        })();
+
+        var emp = {
+            "employees": [{ "name": "Tom", "workyear": 3, "salary": 35000 },
+            { "name": "Jack", "workyear": 13, "salary": 75000 },
+            { "name": "Mary", "workyear": 8, "salary": 45000 }]
+        };
+        console.log(emp.employees[1].salary + " /" + emp.employees[1].name);
+
+        const emps = emp.employees.map(employee => {
+            //解構賦值
+            const { name, workyear, salary } = employee;
+            return (
+                `<tr>
+                        <td>${name}</td>
+                        <td>${workyear}</td>
+                        <td>${salary}</td>
+                </tr>`)
+        })
+        document.getElementById("pp").innerHTML = emps.join("");
+    </script>
+}

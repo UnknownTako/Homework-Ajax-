@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Demo2";
+}
+
+<h1>Demo2</h1>
+<input type="button" id="but" value="Ajax start" class="btn btn-danger" />
+<span>...<img src="~/images/fidget-spinner.gif" id="loading" style="display:none;" /><img src="~/images/_ _in love.gif" id="loading2" style="display:none;" />...</span>
+<input type="button" id="but2" value="Ajax start()" class="btn btn-primary" /><br />
+<input type="button" id="but3" value="Ajax pause" class="btn btn-warning" />
+<div id="dd"></div>
+
+@section Scripts{
+    <script>
+        let btn = document.querySelector("#but");
+        let btn2 = document.querySelector("#but2");
+        let btn3 = document.querySelector("#but3");
+        let loadimg = document.querySelector("#loading");
+        let loadimg2 = document.querySelector("#loading2");
+        let divided = document.querySelector("#dd");
+        let abortController;
+
+        btn.addEventListener('click', () => {
+            divided.innerHTML += `button clicked<br>`;
+            console.log(fetch('/api/index'));
+            console.log(fetch('@Url.Content("/api/index")'));
+            console.log(fetch('@Url.Action("index","api")'));
+            fetch('/api/index')
+                .then(response => {
+                    console.log(response);
+                    //console.log(response.text());
+                    return response.text()
+                })
+                .then(datas => {
+                    console.log(datas);
+                    divided.innerHTML += `${datas}`;
+                });
+
+            fetch('@Url.Content("~/api/index")')
+                .then(response => {
+                    response.headers.forEach((value, name) => {
+                        console.log(`${name}:${value}`);
+                    })
+                });
+            loadimg.style.display = "none";
+            loadimg2.style.display = "inline";
+            btn2.removeAttribute('disabled');
+            btn.setAttribute('disabled', 'disabled');
+        });
+
+        btn3.addEventListener('click', () => { if (abortController)abortController.abort();});
+
+        btn2.addEventListener('click', async () => {
+            try {
+                btn2.setAttribute('disabled', 'disabled');
+                loadimg.style.display = "inline";
+
+                abortController = new AbortController();
+                var signal = abortController.signal;
+                var response = await fetch('@Url.Content("/api/index")',{signal})
+                setTimeout(abortController.abort(), 4000);
+                var datas = await response.text();
+                if (!response.ok) throw new Error(`錯誤碼:${response.status}`);
+                divided.innerHTML += `button2 clicked<br>`
+                divided.innerHTML += `${datas}`;
+
+                loadimg2.style.display = "none";
+                btn.removeAttribute('disabled');
+            }
+            catch (error) { divided.innerHTML += `<h2>${error.message}</h2>`; }
+            finally {
+                loadimg.style.display = "none";
+                btn2.removeAttribute('disabled');
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "homework3";
+}
+
+<h1>會員註冊</h1>
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <h1>Register</h1>
+        <form method="post" action="~/api/register" id="userForm">
+            <div class="mb-3">
+                <label for="InputName" class="form-label">姓名</label>
+                <input type="text" class="form-control" id="InputName" name="name">
+                <p><span style="color:red; display:none;" id="nsp">*必填</span></p><p id="msg" style="color:red;" />
+            </div>
+            <div class="mb-3">
+                <label for="InputEmail" class="form-label">電子郵件</label>
+                <input type="email" class="form-control" id="InputEmail" name="email">
+                <p><span style="color:red; display:none;" id="esp">*必填</span></p>
+            </div>
+            <div class="mb-3">
+                <label for="InputPassword" class="form-label">密碼</label>
+                <input type="number" class="form-control" id="InputPassword" name="password">
+                <p><span style="color:red; display:none;" id="psp">*必填</span></p>
+            </div>
+            <div class="mb-3">
+                <label for="InputPasswordre" class="form-label">密碼確認</label>
+                <input type="number" class="form-control" id="InputPasswordre" name="passwordre">
+                <p id="msg2" />
+            </div>
+            <div class="mb-3">
+                <label for="InputAge" class="form-label">年紀</label>
+                <input type="number" class="form-control" id="InputAge" name="age">
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">圖像</label>
+                <input class="form-control" type="file" id="formFile" name="avatar">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnsubmit">送出</button>
+        </form>
+        <div id="div1" class="alert alert-info mt-3" style="background-color:lightgoldenrodyellow;"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const message = document.getElementById('msg');
+        const message2 = document.getElementById('msg2');
+        const divResult = document.querySelector('#div1');
+        const btnSubmit = document.querySelector('#btnsubmit');
+        const inpName = document.querySelector('#InputName');
+        const inpEmail = document.querySelector('#InputEmail');
+        const inpPassword = document.querySelector('#InputPassword');
+        const inpRePassword = document.querySelector('#InputPasswordre');
+        const inpAge = document.querySelector('#InputAge');
+        btnSubmit.addEventListener('click', async (event) => {
+            event.preventDefault();
+            if (inpName.value.trim() === "" || inpEmail.value.trim() === "" || inpPassword.value.trim() === "" || inpName.value.trim() === "" || inpRePassword.value.trim() === "") {
+                divResult.textContent = "請重新註冊";
+                return;
+            }
+
+            const myForm = document.querySelector('#userForm');
+            const formData = new FormData(myForm);
+
+            const url = '@Url.Content("~/api/register/")';
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            let data = await response.text();
+            divResult.textContent = data;
+        })
+
+        const checkname = async () => {
+            let response = await fetch(`@Url.Content("~/api/CheckAccount/")?name=${inpName.value}&age=${inpAge.value}&email=${inpEmail.value}`);
+            let data = await response.text();
+            if (data == "True")
+                message.textContent = "*此帳號名稱已被註冊";
+            else
+                message.textContent = "";
+        };
+        function checkpassword() {
+            if (inpPassword.value == "") return;
+            if (inpRePassword.value == inpPassword.value) {
+                message2.style.color = "limegreen";
+                message2.textContent = "✓與密碼相符";
+            }
+            else {
+                message2.style.color = "red";
+                message2.textContent = "✘與密碼不符";
+            }
+        }
+        inpName.addEventListener('blur', checkname);
+        inpRePassword.addEventListener('blur', checkpassword);
+        inpName.addEventListener('blur', () => {
+            var namespan = document.getElementById('nsp');
+            if (inpName.value.trim() === "") namespan.style.display = 'block';
+            else namespan.style.display = 'none';
+        });
+        inpEmail.addEventListener('blur', () => {
+            var emailspan = document.getElementById('esp');
+            if (inpName.value.trim() === "") emailspan.style.display = 'block';
+            else emailspan.style.display = 'none';
+        });
+        inpPassword.addEventListener('blur', () => {
+            var passwordspan = document.getElementById('psp');
+            if (inpName.value.trim() === "") passwordspan.style.display = 'block';
+            else passwordspan.style.display = 'none';
+        });
+
+    </script>
+}
