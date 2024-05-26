@@ -101,12 +101,12 @@
         });
         inpEmail.addEventListener('blur', () => {
             var emailspan = document.getElementById('esp');
-            if (inpName.value.trim() === "") emailspan.style.display = 'block';
+            if (inpEmail.value.trim() === "") emailspan.style.display = 'block';
             else emailspan.style.display = 'none';
         });
         inpPassword.addEventListener('blur', () => {
             var passwordspan = document.getElementById('psp');
-            if (inpName.value.trim() === "") passwordspan.style.display = 'block';
+            if (inpPassword.value.trim() === "") passwordspan.style.display = 'block';
             else passwordspan.style.display = 'none';
         });
 
