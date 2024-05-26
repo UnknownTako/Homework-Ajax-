@@ -36,7 +36,7 @@
             //console.log(url);
             const response = await fetch(url);
             const datas = await response.json();
-            const districts = datas.map(district => `<option value="${district}">${district}</option>`);
+            const districts = datas.map(district => `<option value="${district}">${district.substring(3, district.length)}</option>`);
             selectedDistrict.innerHTML = districts.join("");
         }
 

@@ -9,9 +9,15 @@
         <ul class="pagination" id="ul2" />
     </nav>
 </div>
-<div class="col-3">
-    <input type="search" placeholder="搜尋景點資料" class="form-control" id="inputSearch" />
-</div></div>
+    <div class="col-3">
+        <input type="search" placeholder="搜尋景點資料" class="form-control" id="inputSearch" />
+        <div class="list-group" id="autodiv">
+            <button type="button" class="list-group-item list-group-item-action" style="display:none;" onclick="autobtnClicked(event)" value="河濱自行車道">
+                河濱自行車道
+            </button>
+        </div>
+    </div>
+</div>
 <div class="row mb-3">
     <div class="col-3">
         <div class="form-check mt-2">
@@ -149,5 +155,45 @@
             console.log(searchData);
             loadSpots();
         });
+
+
+        //autocomplete
+        inpSearch.addEventListener('input', async (event) => {
+            if (inpSearch.value === "") { document.getElementById('autodiv').innerHTML = ""; return; }
+            if (event.target.matches('#inputSearch, #inputSearch *')) {
+                let url = 'https://localhost:7127/api/Spots';
+                let response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(searchData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                let data = await response.json();
+
+                var s = "";
+                for (let i of data.spotsResult) {
+                    if (i.spotTitle.includes(inpSearch.value)) {
+                        console.log(i.spotTitle);
+                        s += `<button type="button"
+                                 class="list-group-item list-group-item-action"
+                                 onclick="autobtnClicked(event)"
+                                 value="${i.spotTitle}">${i.spotTitle}</button>`
+                    }
+                };
+                document.getElementById('autodiv').innerHTML = s;
+            }
+        });
+        function autobtnClicked(event) {
+            console.log(event.target.value);
+            inpSearch.value = event.target.value;
+            console.log(inpSearch.value);
+
+            searchData.keyword = event.target.value;
+            searchData.categoryId = 0;
+            searchData.page = 1;
+            loadSpots();
+        }
+
     </script>
 }

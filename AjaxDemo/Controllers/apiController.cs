@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Mime;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace AjaxDemo.Controllers
 {
@@ -140,6 +141,18 @@ namespace AjaxDemo.Controllers
             spotsPaging.TotalPages = totalPages;
             spotsPaging.SpotsResult = spots.ToList();
             return Json(spotsPaging);
+        }
+
+
+        public IActionResult AutoComplete(string keyword)
+        {
+            var spots = _context.SpotImagesSpots;
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var titles = spots.Where(s => s.SpotTitle.Contains(keyword)).Select(s => s.SpotTitle).Take(8);
+                return Json(titles);
+            }
+            return NotFound();
         }
     }
 }
