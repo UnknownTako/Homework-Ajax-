@@ -54,9 +54,13 @@
         const inpPassword = document.querySelector('#InputPassword');
         const inpRePassword = document.querySelector('#InputPasswordre');
         const inpAge = document.querySelector('#InputAge');
+        let passwordCheck = false;
         btnSubmit.addEventListener('click', async (event) => {
             event.preventDefault();
-            if (inpName.value.trim() === "" || inpEmail.value.trim() === "" || inpPassword.value.trim() === "" || inpName.value.trim() === "" || inpRePassword.value.trim() === "") {
+            if (inpName.value.trim() === "" || inpEmail.value.trim() === "" ||
+            inpPassword.value.trim() === "" || inpName.value.trim() === "" ||
+                inpRePassword.value.trim() === "" || !passwordCheck) {
+                inpPassword.value = ""; inpRePassword.value = "";
                 divResult.textContent = "請重新註冊";
                 return;
             }
@@ -84,10 +88,12 @@
         function checkpassword() {
             if (inpPassword.value == "") return;
             if (inpRePassword.value == inpPassword.value) {
+                passwordCheck = true;
                 message2.style.color = "limegreen";
                 message2.textContent = "✓與密碼相符";
             }
             else {
+                passwordCheck = false;
                 message2.style.color = "red";
                 message2.textContent = "✘與密碼不符";
             }
